@@ -3,6 +3,10 @@ name: Deploy React App to EKS
 on:
   push:
     branches: ['gamechanger111']  # corrected
+  workflow_dispatch:
+
+
+
 
 jobs:
   build-and-deploy:

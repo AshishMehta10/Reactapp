@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - main   # workflow triggers on push to main branch
+      - '@gamechanger111'
+
 
 jobs:
   build-and-deploy:

@@ -3,7 +3,6 @@ name: React App CI/CD
 on:
   push:
     branches:
-      - main
       - '@gamechanger111'
 
 

@@ -27,7 +27,7 @@ jobs:
         run: |
           echo "Getting AWS Account ID..."
           ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
-          IMAGE_URI=$ACCOUNT_ID.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{ secrets.ECR_REPOSITORY }}:latest
+          IMAGE_URI=$ACCOUNT_ID.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{ secrets.ECR_REPOSITORY }}
           echo "Building Docker image: $IMAGE_URI"
           docker build -t $IMAGE_URI .
           echo "Pushing Docker image to ECR..."

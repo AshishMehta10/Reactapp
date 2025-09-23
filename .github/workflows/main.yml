@@ -2,8 +2,7 @@ name: React App CI/CD
 
 on:
   push:
-    branches:
-      - main   # workflow triggers on push to main branch
+    branches:   
       - '@gamechanger111'
 
 

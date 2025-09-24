@@ -10,11 +10,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1️⃣ Checkout the repository
+      # 1️⃣ Checkout your code
       - name: Checkout Code
         uses: actions/checkout@v3
 
-      # 2️⃣ Configure AWS Credentials
+      # 2️⃣ Configure AWS credentials
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v2
         with:
@@ -22,31 +22,29 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
 
-      # 3️⃣ Login to Amazon ECR
+      # 3️⃣ Login to ECR
       - name: Login to Amazon ECR
         uses: aws-actions/amazon-ecr-login@v2
 
-      # 4️⃣ Build & Push Docker Image
+      # 4️⃣ Build and push Docker image
       - name: Build & Push Docker Image
         run: |
           ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
           IMAGE_URI=$ACCOUNT_ID.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{ secrets.ECR_REPOSITORY }}
-          echo "Building Docker image: $IMAGE_URI:latest"
-          docker build -t $IMAGE_URI:latest .
+          echo "Building Docker image: $IMAGE_URI"
+          docker build -t $IMAGE_URI .
+          echo "Tagging Docker image..."
+          docker tag $IMAGE_URI $IMAGE_URI:latest
           echo "Pushing Docker image to ECR..."
           docker push $IMAGE_URI:latest
 
       # 5️⃣ Update kubeconfig for EKS
-      - name: Update kubeconfig
+      - name: Update kubeconfig for EKS
         run: |
           aws eks update-kubeconfig --name ${{ secrets.EKS_CLUSTER_NAME }} --region ${{ secrets.AWS_REGION }}
 
-      # 6️⃣ Deploy to EKS
+      # 6️⃣ Deploy to EKS using your manifests
       - name: Deploy to EKS
         run: |
-          # Replace image in deployment.yaml dynamically (optional)
-          IMAGE_URI=$ACCOUNT_ID.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{ secrets.ECR_REPOSITORY }}:latest
-          sed -i "s|image: .*|image: $IMAGE_URI|g" k8s/deployment.yaml
           kubectl apply -f k8s/deployment.yaml
-          # Wait until deployment is complete
-          kubectl rollout status deployment/react-app -n default
+          kubectl apply -f k8s/service.yaml

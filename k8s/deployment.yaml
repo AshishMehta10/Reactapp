@@ -13,12 +13,12 @@ spec:
         app: react-app
     spec:
       containers:
-      - name: react-app
-        image: 447367778057.dkr.ecr.ap-south-1.amazonaws.com/react-app:latest  # full ECR URI
-        ports:
-        - containerPort: 3000  # React app serves on 3000 inside the container
-      imagePullSecrets:  # needed for private ECR
-      - name: ecr-secret
+        - name: react-app
+          image: 447367778057.dkr.ecr.ap-south-1.amazonaws.com/react-app:latest
+          ports:
+            - containerPort: 3000
+      imagePullSecrets:
+        - name: ecr-secret
 ---
 apiVersion: v1
 kind: Service
@@ -29,6 +29,6 @@ spec:
     app: react-app
   type: LoadBalancer
   ports:
-  - protocol: TCP
-    port: 80
-    targetPort: 3000  # must match containerPort
+    - protocol: TCP
+      port: 80
+      targetPort: 3000

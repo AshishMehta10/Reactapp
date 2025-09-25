@@ -16,7 +16,7 @@ spec:
         - name: react-app
           image: 447367778057.dkr.ecr.ap-south-1.amazonaws.com/react-app:latest
           ports:
-            - containerPort: 3000
+            - containerPort: 80   # match Dockerfile port
       imagePullSecrets:
         - name: ecr-secret
 ---
@@ -31,4 +31,4 @@ spec:
   ports:
     - protocol: TCP
       port: 80
-      targetPort: 3000
+      targetPort: 80   # match container port

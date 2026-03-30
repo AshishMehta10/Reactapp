@@ -13,10 +13,12 @@ spec:
         app: react-app
     spec:
       containers:
-      - name: react-app
-        image: <AWS_ACCOUNT_ID>.dkr.ecr.ap-south-1.amazonaws.com/react-app:latest
-        ports:
-        - containerPort: 80
+        - name: react-app
+          image: 447367778057.dkr.ecr.ap-south-1.amazonaws.com/react-app:latest
+          ports:
+            - containerPort: 80   # match Dockerfile port
+      imagePullSecrets:
+        - name: ecr-secret
 ---
 apiVersion: v1
 kind: Service
@@ -27,6 +29,6 @@ spec:
     app: react-app
   type: LoadBalancer
   ports:
-  - protocol: TCP
-    port: 80
-    targetPort: 80
+    - protocol: TCP
+      port: 80
+      targetPort: 80   # match container port
